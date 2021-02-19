@@ -4,10 +4,10 @@
 
 This project simulate the simplest optimization process.  
   
-Initial configuration  
+## Initial configuration  
 There are 500 of randomly generated points in the frame.  
   
-Simulation method  
+## Simulation  
 1. A random dot is generated in each frame.  
 2. The square norm is calculated from each point and the dot.  
 3. If that square norm is the minimum, note the value.  
