@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(00_random)
 
+add_definitions(-DPATH_ROOT_DIR="${PROJECT_SOURCE_DIR}/..")
+
 ####################################
 
 # glfw
@@ -18,7 +20,8 @@ find_package(OpenGL REQUIRED)
 
 #####################################
 
-include_directories(../3rd_party/glfw/include)
+include_directories(../3rd_party/glfw/include
+                    ../3rd_party)
 
 add_executable(${PROJECT_NAME}
   main.cpp)
