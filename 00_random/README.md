@@ -5,7 +5,7 @@
 This project simulates the simplest optimization process.  
   
 ## Initial configuration  
-500 points are randomly generated on the OpenGL window  
+250 points are randomly generated on the OpenGL window  
   
 ## Simulation  
 1. A random dot is generated in the frame.  

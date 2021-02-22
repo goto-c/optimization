@@ -5,7 +5,7 @@
 This project simulates the gradient discent method of optimization.  
   
 ## Initial configuration  
-500 points are randomly generated on the OpenGL window.  
+250 points are randomly generated on the OpenGL window.  
   
 ## Simulation  
 1. A target point is generated on the top-right position on the window.
