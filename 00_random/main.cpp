@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <random>
 
-#define NUMBER_OF_POINTS 500
+#define NUMBER_OF_POINTS 250
 
 #define WINDOW_SIZE 1000
 
@@ -22,6 +22,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+float square_error_sum(float* points, float* target_point){
+    float square_error_sum = 0;
+    for (int i=0; i<NUMBER_OF_POINTS; i++){
+        square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
+    }
+    return square_error_sum;
 }
 
 int main(void)
@@ -49,6 +57,7 @@ int main(void)
     float min_square_error = 1000000000;
     int step_number = 0;
     int total_iteration_number = 0;
+    
   while (!glfwWindowShouldClose(window))
   {
       
@@ -70,11 +79,9 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
-    float tmp_square_error = 0;
     float candidate[2] = {rnd(mt) - WINDOW_SIZE, rnd(mt) - WINDOW_SIZE};
-    for (int i=0; i<NUMBER_OF_POINTS/2; i++){
-        tmp_square_error += pow(points[2*i+0] - candidate[0], 2) + pow(points[2*i+1] - candidate[1], 2);
-    }
+    float tmp_square_error = square_error_sum(points, candidate);
+    
       
     if (tmp_square_error < min_square_error){
         total_iteration_number = 0;
