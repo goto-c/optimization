@@ -47,22 +47,22 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
     
-    std::mt19937 mt(0);
-    std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
-    float points[NUMBER_OF_POINTS];
-    for (int i=0; i<NUMBER_OF_POINTS; i++){
-        points[i] = rnd(mt) - WINDOW_SIZE;
-    }
-    float center[2] = { 1.f, 1.f };
-    float min_square_error = 1000000000;
-    int step_number = 0;
-    int total_iteration_number = 0;
+  std::mt19937 mt(0);
+  std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
+  float points[NUMBER_OF_POINTS];
+  for (int i=0; i<NUMBER_OF_POINTS; i++){
+      points[i] = rnd(mt) - WINDOW_SIZE;
+  }
+  float center[2] = { 1.f, 1.f };
+  float min_square_error = 1000000000;
+  int step_number = 0;
+  int lap_iteration_number = 0;
     
   while (!glfwWindowShouldClose(window))
   {
       
-    total_iteration_number++;
-    if(total_iteration_number > 1000){
+    lap_iteration_number++;
+    if(lap_iteration_number > 1000){
         break;
     }
       
@@ -84,7 +84,7 @@ int main(void)
     
       
     if (tmp_square_error < min_square_error){
-        total_iteration_number = 0;
+        lap_iteration_number = 0;
         min_square_error = tmp_square_error;
         center[0] = candidate[0];
         center[1] = candidate[1];
