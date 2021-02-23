@@ -8,13 +8,6 @@
 
 #define WINDOW_SIZE 500
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
-#define SCRSHOT
-
 static void error_callback(int error, const char* description)
 {
   fputs(description, stderr);
@@ -39,7 +32,7 @@ float square_error_sum(float* points, int* target_point){
     for (int i=0; i<NUMBER_OF_POINTS; i++){
         square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
     }
-    return square_error_sum / NUMBER_OF_POINTS;
+    return square_error_sum;
 }
 
 void create_random_points(float* points){
@@ -53,9 +46,7 @@ void create_random_points(float* points){
 void calc_z_value(float* points, float* z){
     for (int i=0; i<2*WINDOW_SIZE * 2*WINDOW_SIZE; i++){
         int coord[2] = { i / (2*WINDOW_SIZE) - WINDOW_SIZE, i % (2*WINDOW_SIZE) - WINDOW_SIZE};
-        z[i] = square_error_sum(points, coord);
-        std::cout << "coord : " << coord[0] << ", " << coord[1] << std::endl;
-        std::cout << (std::log(z[i])/40 - 0.3)*20 << std::endl;
+        z[i] = square_error_sum(points, coord) / NUMBER_OF_POINTS;
     }
 }
 
@@ -79,10 +70,6 @@ int main(void)
     
   float z[2*WINDOW_SIZE * 2*WINDOW_SIZE];
   calc_z_value(points, z);
-    
-//  for (int i=0; i<WINDOW_SIZE*WINDOW_SIZE; i++){
-//      std::cout << std::log(z[i])/40 << std::endl;
-//  }
     
   while (!glfwWindowShouldClose(window))
   {
@@ -135,6 +122,7 @@ int main(void)
     for (int i=0; i<2*WINDOW_SIZE * 2*WINDOW_SIZE; i++){
         int coord[2] = { i / (2*WINDOW_SIZE) - WINDOW_SIZE, i % (2*WINDOW_SIZE) - WINDOW_SIZE};
         float coordf[2] = {coord[0], coord[1]};
+        // 40, 0.3, 26 : scale factor to make r value 0 ~ 1
         glColor3f((std::log(z[i])/40 - 0.3)*26, (std::log(z[i])/40 - 0.3)*10, (std::log(z[i])/40 - 0.3)*10);
         glVertex3f(coordf[0]/WINDOW_SIZE, coordf[1]/WINDOW_SIZE, (std::log(z[i])/40 - 0.3)*20);
     }
