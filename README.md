@@ -10,5 +10,5 @@
 
 ## 03_newton
 
-## 04_contour_visualization
-<img src="04_contour_visualization/thumbnail.png" width="320px">
+## 04_square_error_visualization
+<img src="04_square_error_visualization/thumbnail.png" width="320px">
