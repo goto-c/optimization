@@ -5,3 +5,7 @@
 
 ## 01_gradient_descent
 <img src="01_gradient_descent/thumbnail.gif" width="320px">
+
+## 02_levenberg_marquart
+
+## 03_newton
