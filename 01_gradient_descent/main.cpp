@@ -26,12 +26,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-float square_error(float* points, float* target_point){
-    float square_error = 0;
+float square_error_sum(float* points, float* target_point){
+    float square_error_sum = 0;
     for (int i=0; i<NUMBER_OF_POINTS; i++){
-        square_error += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
+        square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
     }
-    return square_error;
+    return square_error_sum;
 }
 
 void create_random_points(float* points){
@@ -45,10 +45,10 @@ void create_random_points(float* points){
 void calc_gradient(float* points, float* target_point, float* gradient, float dh){
     float target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
     float target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
-    float dx = square_error(points, target_point_plus_x);
-    float dy = square_error(points, target_point_plus_y);
-    dx -= square_error(points, target_point);
-    dy -= square_error(points, target_point);
+    float dx = square_error_sum(points, target_point_plus_x);
+    float dy = square_error_sum(points, target_point_plus_y);
+    dx -= square_error_sum(points, target_point);
+    dy -= square_error_sum(points, target_point);
     gradient[0] = dx / dh;
     gradient[1] = dy / dh;
 }
