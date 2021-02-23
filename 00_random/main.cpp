@@ -13,6 +13,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#define SCRSHOT
+
 static void error_callback(int error, const char* description)
 {
   fputs(description, stderr);
@@ -106,6 +108,7 @@ int main(void)
           
         glEnd();
           
+#ifdef SCRSHOT
         GLubyte* pixel_data = (GLubyte*)malloc((width)*(height)*3*(sizeof(GLubyte)));
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glReadPixels(0, 0,
@@ -121,6 +124,7 @@ int main(void)
                         pixel_data,
                         0);
         free(pixel_data);
+#endif
         step_number++;
         glfwSwapBuffers(window);
         glfwPollEvents();
