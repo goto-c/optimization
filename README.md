@@ -9,3 +9,6 @@
 ## 02_levenberg_marquart
 
 ## 03_newton
+
+## 04_contour_visualization
+<img src="04_contour_visualization/thumbnail.png" width="320px">
