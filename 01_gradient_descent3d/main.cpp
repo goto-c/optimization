@@ -34,7 +34,7 @@ int main(void)
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "01_gradient_descent", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "01_gradient_descent3d", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -44,11 +44,12 @@ int main(void)
   glfwSetKeyCallback(window, key_callback);
     
   int field_size = 500;
+  int number_of_points = NUMBER_OF_POINTS;
   float points[NUMBER_OF_POINTS * 2];
-  create_random_points(points, field_size);
+  create_random_points(points, field_size, number_of_points);
     
   float z[2*field_size * 2*field_size];
-  calc_z_value(points, z, field_size);
+  calc_z_value(points, z, field_size, number_of_points);
 
   float optimized_point[2] = { 500.f, -500.f };
 
@@ -79,7 +80,7 @@ int main(void)
     glRotatef(0.f, -1.f, 0.1f, 0.f);
     glTranslatef(0.f, 0.f, -0.4f);
       
-    calc_gradient(points, optimized_point, gradient, dh);
+    calc_gradient(points, optimized_point, gradient, dh, number_of_points);
     std::cout << "gradient : (" << gradient[0] << ", " << gradient[1] << ")" << std::endl;
     if (std::sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1]) < 5000){
         break; // converged

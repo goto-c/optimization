@@ -34,7 +34,7 @@ int main(void)
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "00_random", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "00_random3d", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -44,6 +44,7 @@ int main(void)
   glfwSetKeyCallback(window, key_callback);
     
   int field_size = 500;
+  int number_of_points = NUMBER_OF_POINTS;
   std::mt19937 mt(0);
   std::uniform_int_distribution<int> rnd(0, field_size * 2);
   float points[NUMBER_OF_POINTS * 2];
@@ -52,7 +53,7 @@ int main(void)
   }
     
   float z[2*field_size * 2*field_size];
-  calc_z_value(points, z, field_size);
+  calc_z_value(points, z, field_size, number_of_points);
     
   float center[2] = { 1.f, 1.f };
   float min_square_error = 1000000000;
@@ -85,7 +86,7 @@ int main(void)
     glTranslatef(0.f, 0.f, -0.4f);
       
     float candidate[2] = {rnd(mt) - field_size, rnd(mt) - field_size};
-    float tmp_square_error = square_error_sum(points, candidate);
+    float tmp_square_error = square_error_sum(points, candidate, number_of_points);
     
       
     if (tmp_square_error < min_square_error){

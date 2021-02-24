@@ -44,8 +44,9 @@ int main(void)
   glfwSetKeyCallback(window, key_callback);
     
   int field_size = 1000;
+  int number_of_points = NUMBER_OF_POINTS;
   float points[NUMBER_OF_POINTS * 2];
-  create_random_points(points, field_size);
+  create_random_points(points, field_size, number_of_points);
 
   float optimized_point[2] = { 640.f, 640.f };
 
@@ -72,7 +73,7 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
-    calc_gradient(points, optimized_point, gradient, dh);
+    calc_gradient(points, optimized_point, gradient, dh, number_of_points);
     std::cout << "gradient : (" << gradient[0] << ", " << gradient[1] << ")" << std::endl;
     if (std::sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1]) < 5000){
         break; // converged

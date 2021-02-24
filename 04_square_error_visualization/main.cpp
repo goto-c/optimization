@@ -36,11 +36,12 @@ int main(void)
   glfwSetKeyCallback(window, key_callback);
     
   int field_size = 500;
+  int number_of_points = NUMBER_OF_POINTS;
   float points[NUMBER_OF_POINTS * 2];
-  create_random_points(points, field_size);
+  create_random_points(points, field_size, number_of_points);
     
   float z[2*field_size * 2*field_size];
-  calc_z_value(points, z, field_size);
+  calc_z_value(points, z, field_size, number_of_points);
     
   while (!glfwWindowShouldClose(window))
   {
@@ -83,7 +84,7 @@ int main(void)
       
     glPointSize(10);
     glBegin(GL_POINTS);
-    for (int i=0; i<NUMBER_OF_POINTS/2; i++){
+    for (int i=0; i<NUMBER_OF_POINTS; i++){
         glColor3f(1.f, 0.f, 0.f);
         glVertex3f(points[2*i+0]/field_size, points[2*i+1]/field_size, 0.f);
     }
