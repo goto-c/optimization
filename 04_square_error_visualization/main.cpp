@@ -56,7 +56,7 @@ int main(void)
     glOrtho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(75.f, -1.f, 0.f, 0.2f);
+    glRotatef(75.f, -1.f, 0.f, 0.f);
     glTranslatef(0.f, 0.f, -0.4f);
     //glRotatef(0.f, -1.f, 0.f, 0.f);
         
@@ -77,6 +77,8 @@ int main(void)
     glVertex3f( 1.5f,  0.f, 0.f);
     glVertex3f( 0.f, -1.5f, 0.f);
     glVertex3f( 0.f, 1.5f, 0.f);
+    glVertex3f( 0.f, 0.f, -0.5f);
+    glVertex3f( 0.f, 0.f, 1.5f);
     glEnd();
       
     glPointSize(10);

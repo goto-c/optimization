@@ -5,6 +5,7 @@
 #include <random>
 
 #define NUMBER_OF_POINTS 250
+
 #define WINDOW_SIZE 1000
 
 #include "numOpt.hpp"
@@ -42,13 +43,17 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
     
-  int field_size = 1000;
+  int field_size = 500;
   std::mt19937 mt(0);
   std::uniform_int_distribution<int> rnd(0, field_size * 2);
   float points[NUMBER_OF_POINTS * 2];
   for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
       points[i] = rnd(mt) - field_size;
   }
+    
+  float z[2*field_size * 2*field_size];
+  calc_z_value(points, z, field_size);
+    
   float center[2] = { 1.f, 1.f };
   float min_square_error = 1000000000;
   int step_number = 0;
@@ -58,7 +63,7 @@ int main(void)
   {
       
     lap_iteration_number++;
-    if(lap_iteration_number > 1000){
+    if(lap_iteration_number > 10000){
         break;
     }
       
@@ -67,13 +72,15 @@ int main(void)
     glfwGetFramebufferSize(window, &width, &height);
     ratio = width / (float) height;
     glViewport(0, 0, width, height);
+    glClearColor(1.f, 1.f, 1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(0.f, 0.f, 0.f, 1.f);
+    glRotatef(85.f, -1.f, 0.1f, 0.f);
+    glTranslatef(0.f, 0.f, -0.4f);
       
     float candidate[2] = {rnd(mt) - field_size, rnd(mt) - field_size};
     float tmp_square_error = square_error_sum(points, candidate);
@@ -90,16 +97,49 @@ int main(void)
         std::cout << "minimal square error : " << min_square_error << std::endl;
         std::cout << std::endl;
         
+        glColor3f(0.7f, 0.7f, 0.7f);
+        glBegin(GL_TRIANGLES);
+        glVertex3f(-1.f,  1.f, 0.f);
+        glVertex3f(-1.f, -1.f, 0.f);
+        glVertex3f( 1.f,  1.f, 0.f);
+        glVertex3f(-1.f, -1.f, 0.f);
+        glVertex3f( 1.f, -1.f, 0.f);
+        glVertex3f( 1.f,  1.f, 0.f);
+        glEnd();
+          
+        glLineWidth(2.0f);
+        glColor3f(0.3f, 0.3f, 0.3f);
+        glBegin(GL_LINES);
+        glVertex3f(-1.5f,  0.f, 0.f);
+        glVertex3f( 1.5f,  0.f, 0.f);
+        glVertex3f( 0.f, -1.5f, 0.f);
+        glVertex3f( 0.f, 1.5f, 0.f);
+        glVertex3f( 0.f, 0.f, -0.5f);
+        glVertex3f( 0.f, 0.f, 1.5f);
+        glEnd();
+        
         glPointSize(10);
         glBegin(GL_POINTS);
-          
         for (int i=0; i<NUMBER_OF_POINTS/2; i++){
             glColor3f(1.f, 0.f, 0.f);
             glVertex2f(points[2*i+0]/field_size, points[2*i+1]/field_size);
         }
         glColor3f(0.f, 1.f, 0.f);
         glVertex2f(center[0]/field_size, center[1]/field_size);
-          
+        int center_idx = 2*field_size*(center[0] + field_size) + center[1] + field_size;
+        glColor3f(0.f, 1.f, 0.f);
+        glVertex3f(center[0]/field_size, center[1]/field_size, (std::log(z[center_idx])/40 - 0.3)*20);
+        glEnd();
+        
+        glPointSize(1);
+        glBegin(GL_POINTS);
+        for (int i=0; i<2*field_size * 2*field_size; i++){
+            int coord[2] = { i / (2*field_size) - field_size, i % (2*field_size) - field_size};
+            float coordf[2] = {coord[0], coord[1]};
+            // 40, 0.3, 26 : scale factor to make r value 0 ~ 1
+            glColor3f((std::log(z[i])/40 - 0.3)*26, (std::log(z[i])/40 - 0.3)*10, (std::log(z[i])/40 - 0.3)*10);
+            glVertex3f(coordf[0]/field_size, coordf[1]/field_size, (std::log(z[i])/40 - 0.3)*20);
+        }
         glEnd();
           
 #ifdef SCRSHOT
@@ -113,7 +153,7 @@ int main(void)
         if (!pixel_data) std::cout << "error pixel data " << std::endl;
             
         stbi_flip_vertically_on_write(1);
-        stbi_write_png((std::string(PATH_ROOT_DIR) + "/00_random/output/step" + std::to_string(step_number) + ".png").c_str(),
+        stbi_write_png((std::string(PATH_ROOT_DIR) + "/00_random3d/output/step" + std::to_string(step_number) + ".png").c_str(),
                         width, height, 3,
                         pixel_data,
                         0);
