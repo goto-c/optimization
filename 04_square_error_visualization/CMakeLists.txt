@@ -21,10 +21,12 @@ find_package(OpenGL REQUIRED)
 #####################################
 
 include_directories(../3rd_party/glfw/include
-                    ../3rd_party)
+                    ../3rd_party
+                    ../src)
 
 add_executable(${PROJECT_NAME}
-  main.cpp)
+  main.cpp
+  ../src/numOpt.cpp)
   
 #####################################
 

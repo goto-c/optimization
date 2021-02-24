@@ -40,7 +40,7 @@ int main(void)
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Simple example", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "00_random", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -49,11 +49,12 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
     
+  int point_limit = 1000;
   std::mt19937 mt(0);
-  std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
-  float points[NUMBER_OF_POINTS];
-  for (int i=0; i<NUMBER_OF_POINTS; i++){
-      points[i] = rnd(mt) - WINDOW_SIZE;
+  std::uniform_int_distribution<int> rnd(0, point_limit * 2);
+  float points[NUMBER_OF_POINTS * 2];
+  for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
+      points[i] = rnd(mt) - point_limit;
   }
   float center[2] = { 1.f, 1.f };
   float min_square_error = 1000000000;
@@ -81,7 +82,7 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
-    float candidate[2] = {rnd(mt) - WINDOW_SIZE, rnd(mt) - WINDOW_SIZE};
+    float candidate[2] = {rnd(mt) - point_limit, rnd(mt) - point_limit};
     float tmp_square_error = square_error_sum(points, candidate);
     
       
@@ -101,10 +102,10 @@ int main(void)
           
         for (int i=0; i<NUMBER_OF_POINTS/2; i++){
             glColor3f(1.f, 0.f, 0.f);
-            glVertex2f(points[2*i+0]/WINDOW_SIZE, points[2*i+1]/WINDOW_SIZE);
+            glVertex2f(points[2*i+0]/point_limit, points[2*i+1]/point_limit);
         }
         glColor3f(0.f, 1.f, 0.f);
-        glVertex2f(center[0]/WINDOW_SIZE, center[1]/WINDOW_SIZE);
+        glVertex2f(center[0]/point_limit, center[1]/point_limit);
           
         glEnd();
           

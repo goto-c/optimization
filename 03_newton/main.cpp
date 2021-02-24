@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <random>
 
+#include "numOpt.hpp"
+
 #define NUMBER_OF_POINTS 250
 
 #define WINDOW_SIZE 1000
@@ -26,83 +28,83 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-float square_error_sum(float* points, float* target_point){
-    float square_error_sum = 0;
-    for (int i=0; i<NUMBER_OF_POINTS; i++){
-        square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
-    }
-    return square_error_sum;
-}
-
-void create_random_points(float* points){
-    std::mt19937 mt(0);
-    std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
-    for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
-        points[i] = rnd(mt) - WINDOW_SIZE;
-    }
-}
-
-void calc_gradient(float* points, float* target_point, float* gradient, float dh){
-    float target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
-    float target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
-    float dx = square_error_sum(points, target_point_plus_x) - square_error_sum(points, target_point);
-    float dy = square_error_sum(points, target_point_plus_y) - square_error_sum(points, target_point);
-    gradient[0] = dx / dh;
-    gradient[1] = dy / dh;
-}
-
-void calc_hessian_factors(float* points, float* target_point, float* hessian_factors, float dh){
-    // hessian_factors[3]:
-    // Hessian = ( hessian_factors[0] hessian_factors[1] )
-    //           ( hessian_factors[1] hessian_factors[2] )
-    float target_point_plus_x[2] =  {target_point[0] + dh, target_point[1]     };
-    float target_point_plus_y[2] =  {target_point[0]     , target_point[1] + dh};
-    float target_point_minus_x[2] = {target_point[0] - dh, target_point[1]     };
-    float target_point_minus_y[2] = {target_point[0]     , target_point[1] - dh};
-    float target_point_plus_xy[2] = {target_point[0] + dh, target_point[1] + dh};
-    float dx2 =       square_error_sum(points, target_point_plus_x)
-                - 2 * square_error_sum(points, target_point)
-                    + square_error_sum(points, target_point_minus_x);
-    float dy2 =       square_error_sum(points, target_point_plus_y)
-                - 2 * square_error_sum(points, target_point)
-                    + square_error_sum(points, target_point_minus_y);
-    float dxdy =   square_error_sum(points, target_point_plus_xy)
-                 - square_error_sum(points, target_point_plus_x)
-                 - square_error_sum(points, target_point_plus_y)
-                 + square_error_sum(points, target_point);
-    hessian_factors[0] = dx2 /(dh*dh);
-    hessian_factors[1] = dxdy/(dh*dh);
-    hessian_factors[2] = dy2 /(dh*dh);
-}
-
-void normalize_mat(float* matrix){
-    float det = matrix[0] * matrix[3] - matrix[2] * matrix[1];
-    for (int i=0; i<4; i++){
-        matrix[i] /= det;
-    }
-}
-
-void normalize_vec(float* vec){
-    float norm = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
-    vec[0] /= norm;
-    vec[1] /= norm;
-}
-
-void calc_inverse_matrix(float* matrix, float* inverse_matrix){
-    // inverse_matrix[4]:
-    // H^(-1) = ( inverse_matrix[0] inverse_matrix[1] )
-    //          ( inverse_matrix[2] inverse_matrix[3] )
-    float det = matrix[0] * matrix[3] - matrix[2] * matrix[1];
-    inverse_matrix[0] = matrix[2] / det;
-    inverse_matrix[1] = -matrix[1] / det;
-    inverse_matrix[2] = -matrix[1] / det;
-    inverse_matrix[3] = matrix[0] / det;
-}
-
-void mat_dot_vec(float* matrix, float* vec, float* target_vec){
-    target_vec[0] = matrix[0] * vec[0] + matrix[1] * vec[1];
-    target_vec[1] = matrix[2] * vec[0] + matrix[3] * vec[1];
-}
+//float square_error_sum(float* points, float* target_point){
+//    float square_error_sum = 0;
+//    for (int i=0; i<NUMBER_OF_POINTS; i++){
+//        square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
+//    }
+//    return square_error_sum;
+//}
+//
+//void create_random_points(float* points){
+//    std::mt19937 mt(0);
+//    std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
+//    for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
+//        points[i] = rnd(mt) - WINDOW_SIZE;
+//    }
+//}
+//
+//void calc_gradient(float* points, float* target_point, float* gradient, float dh){
+//    float target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
+//    float target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
+//    float dx = square_error_sum(points, target_point_plus_x) - square_error_sum(points, target_point);
+//    float dy = square_error_sum(points, target_point_plus_y) - square_error_sum(points, target_point);
+//    gradient[0] = dx / dh;
+//    gradient[1] = dy / dh;
+//}
+//
+//void calc_hessian_factors(float* points, float* target_point, float* hessian_factors, float dh){
+//    // hessian_factors[3]:
+//    // Hessian = ( hessian_factors[0] hessian_factors[1] )
+//    //           ( hessian_factors[1] hessian_factors[2] )
+//    float target_point_plus_x[2] =  {target_point[0] + dh, target_point[1]     };
+//    float target_point_plus_y[2] =  {target_point[0]     , target_point[1] + dh};
+//    float target_point_minus_x[2] = {target_point[0] - dh, target_point[1]     };
+//    float target_point_minus_y[2] = {target_point[0]     , target_point[1] - dh};
+//    float target_point_plus_xy[2] = {target_point[0] + dh, target_point[1] + dh};
+//    float dx2 =       square_error_sum(points, target_point_plus_x)
+//                - 2 * square_error_sum(points, target_point)
+//                    + square_error_sum(points, target_point_minus_x);
+//    float dy2 =       square_error_sum(points, target_point_plus_y)
+//                - 2 * square_error_sum(points, target_point)
+//                    + square_error_sum(points, target_point_minus_y);
+//    float dxdy =   square_error_sum(points, target_point_plus_xy)
+//                 - square_error_sum(points, target_point_plus_x)
+//                 - square_error_sum(points, target_point_plus_y)
+//                 + square_error_sum(points, target_point);
+//    hessian_factors[0] = dx2 /(dh*dh);
+//    hessian_factors[1] = dxdy/(dh*dh);
+//    hessian_factors[2] = dy2 /(dh*dh);
+//}
+//
+//void normalize_mat(float* matrix){
+//    float det = matrix[0] * matrix[3] - matrix[2] * matrix[1];
+//    for (int i=0; i<4; i++){
+//        matrix[i] /= det;
+//    }
+//}
+//
+//void normalize_vec(float* vec){
+//    float norm = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
+//    vec[0] /= norm;
+//    vec[1] /= norm;
+//}
+//
+//void calc_inverse_matrix(float* matrix, float* inverse_matrix){
+//    // inverse_matrix[4]:
+//    // H^(-1) = ( inverse_matrix[0] inverse_matrix[1] )
+//    //          ( inverse_matrix[2] inverse_matrix[3] )
+//    float det = matrix[0] * matrix[3] - matrix[2] * matrix[1];
+//    inverse_matrix[0] = matrix[2] / det;
+//    inverse_matrix[1] = -matrix[1] / det;
+//    inverse_matrix[2] = -matrix[1] / det;
+//    inverse_matrix[3] = matrix[0] / det;
+//}
+//
+//void mat_dot_vec(float* matrix, float* vec, float* target_vec){
+//    target_vec[0] = matrix[0] * vec[0] + matrix[1] * vec[1];
+//    target_vec[1] = matrix[2] * vec[0] + matrix[3] * vec[1];
+//}
 
 int main(void)
 {
@@ -110,7 +112,7 @@ int main(void)
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Simple example", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "03_newton", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -119,8 +121,9 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
     
+  int point_limit = 1000;
   float points[NUMBER_OF_POINTS * 2];
-  create_random_points(points);
+  create_random_points(points, point_limit);
 
   //float optimized_point[2] = { 640.f, 640.f }; // initial point definition
   float optimized_point[2] = { 100.f, 100.f };
@@ -179,10 +182,10 @@ int main(void)
           
     for (int i=0; i<NUMBER_OF_POINTS; i++){
         glColor3f(1.f, 0.f, 0.f);
-        glVertex2f(points[2*i+0]/WINDOW_SIZE, points[2*i+1]/WINDOW_SIZE);
+        glVertex2f(points[2*i+0]/point_limit, points[2*i+1]/point_limit);
     }
     glColor3f(0.f, 1.f, 0.f);
-    glVertex2f(optimized_point[0]/WINDOW_SIZE, optimized_point[1]/WINDOW_SIZE);
+    glVertex2f(optimized_point[0]/point_limit, optimized_point[1]/point_limit);
           
     glEnd();
           
