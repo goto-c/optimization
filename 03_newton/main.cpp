@@ -153,7 +153,7 @@ int main(void)
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
     calc_gradient(points, optimized_point, gradient, dh);
-    if (abs(gradient[0]) < 5000 && abs(gradient[1]) < 5000){
+    if (std::sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1]) < 5000){
         break; // converged
     }
     std::cout << "gradient : " << gradient[0] << ", " << gradient[1] << std::endl;
