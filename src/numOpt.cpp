@@ -17,11 +17,11 @@ float square_error_sum(float* points, int* target_point){
     return square_error_sum;
 }
 
-void create_random_points(float* points, int point_limit){
+void create_random_points(float* points, int field_size){
     std::mt19937 mt(0);
-    std::uniform_int_distribution<int> rnd(0, point_limit * 2);
+    std::uniform_int_distribution<int> rnd(0, field_size * 2);
     for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
-        points[i] = rnd(mt) - point_limit;
+        points[i] = rnd(mt) - field_size;
     }
 }
 
@@ -87,9 +87,9 @@ void mat_dot_vec(float* matrix, float* vec, float* target_vec){
     target_vec[1] = matrix[2] * vec[0] + matrix[3] * vec[1];
 }
 
-void calc_z_value(float* points, float* z, int point_limit){
-    for (int i=0; i<2*point_limit * 2*point_limit; i++){
-        int coord[2] = { i / (2*point_limit) - point_limit, i % (2*point_limit) - point_limit};
+void calc_z_value(float* points, float* z, int field_size){
+    for (int i=0; i<2*field_size * 2*field_size; i++){
+        int coord[2] = { i / (2*field_size) - field_size, i % (2*field_size) - field_size};
         z[i] = square_error_sum(points, coord) / NUMBER_OF_POINTS;
     }
 }

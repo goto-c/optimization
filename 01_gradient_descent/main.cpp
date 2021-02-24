@@ -28,33 +28,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-//float square_error_sum(float* points, float* target_point){
-//    float square_error_sum = 0;
-//    for (int i=0; i<NUMBER_OF_POINTS; i++){
-//        square_error_sum += pow(points[2*i+0] - target_point[0], 2) + pow(points[2*i+1] - target_point[1], 2);
-//    }
-//    return square_error_sum;
-//}
-//
-//void create_random_points(float* points){
-//    std::mt19937 mt(0);
-//    std::uniform_int_distribution<int> rnd(0, WINDOW_SIZE * 2);
-//    for (int i=0; i<NUMBER_OF_POINTS * 2; i++){
-//        points[i] = rnd(mt) - WINDOW_SIZE;
-//    }
-//}
-//
-//void calc_gradient(float* points, float* target_point, float* gradient, float dh){
-//    float target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
-//    float target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
-//    float dx = square_error_sum(points, target_point_plus_x);
-//    float dy = square_error_sum(points, target_point_plus_y);
-//    dx -= square_error_sum(points, target_point);
-//    dy -= square_error_sum(points, target_point);
-//    gradient[0] = dx / dh;
-//    gradient[1] = dy / dh;
-//}
-
 int main(void)
 {
   GLFWwindow* window;
@@ -70,10 +43,9 @@ int main(void)
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
     
-  int point_limit = 1000;
-    
+  int field_size = 1000;
   float points[NUMBER_OF_POINTS * 2];
-  create_random_points(points, point_limit);
+  create_random_points(points, field_size);
 
   float optimized_point[2] = { 640.f, 640.f };
 
@@ -114,10 +86,10 @@ int main(void)
           
     for (int i=0; i<NUMBER_OF_POINTS; i++){
         glColor3f(1.f, 0.f, 0.f);
-        glVertex2f(points[2*i+0]/point_limit, points[2*i+1]/point_limit);
+        glVertex2f(points[2*i+0]/field_size, points[2*i+1]/field_size);
     }
     glColor3f(0.f, 1.f, 0.f);
-    glVertex2f(optimized_point[0]/point_limit, optimized_point[1]/point_limit);
+    glVertex2f(optimized_point[0]/field_size, optimized_point[1]/field_size);
           
     glEnd();
           

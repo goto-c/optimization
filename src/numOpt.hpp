@@ -10,7 +10,7 @@
 float square_error_sum(float* points, float* target_point);
 float square_error_sum(float* points, int* target_point);
 
-void create_random_points(float* points, int point_limit);
+void create_random_points(float* points, int field_size);
 
 void calc_gradient(float* points, float* target_point, float* gradient, float dh);
 
@@ -24,4 +24,4 @@ void calc_inverse_matrix(float* matrix, float* inverse_matrix);
 
 void mat_dot_vec(float* matrix, float* vec, float* target_vec);
 
-void calc_z_value(float* points, float* z, int point_limit);
+void calc_z_value(float* points, float* z, int field_size);
