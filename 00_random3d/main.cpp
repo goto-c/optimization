@@ -79,7 +79,9 @@ int main(void)
     glOrtho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(85.f, -1.f, 0.1f, 0.f);
+//    gRotatef(85.f, -1.f, 0.1f, 0.f);
+    glRotatef(45.f, -1.f, 0.1f, 0.f);
+//    glRotatef(0.f, -1.f, 0.1f, 0.f);
     glTranslatef(0.f, 0.f, -0.4f);
       
     float candidate[2] = {rnd(mt) - field_size, rnd(mt) - field_size};

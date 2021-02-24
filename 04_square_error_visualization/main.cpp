@@ -49,8 +49,8 @@ int main(void)
     glfwGetFramebufferSize(window, &width, &height);
     ratio = width / (float) height;
     glViewport(0, 0, width, height);
-    glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(1.f, 1.f, 1.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
@@ -83,7 +83,6 @@ int main(void)
       
     glPointSize(10);
     glBegin(GL_POINTS);
-      
     for (int i=0; i<NUMBER_OF_POINTS/2; i++){
         glColor3f(1.f, 0.f, 0.f);
         glVertex3f(points[2*i+0]/field_size, points[2*i+1]/field_size, 0.f);

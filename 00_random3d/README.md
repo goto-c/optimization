@@ -1,6 +1,8 @@
 # 00_random3d
 
-<img src="thumbnail.gif">
+<img src="thumbnail1.gif">  
+<img src="thumbnail2.gif">  
+<img src="thumbnail3.gif">  
 
 This project is 3d version of project 00_random
   
