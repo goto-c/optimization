@@ -45,7 +45,7 @@ The gradient descent method converges to the optimal solution faster and better 
 
 ## 04_gauss_newton
 
-## 04_square_error_visualization
+## square_error_visualization
 <img src="04_square_error_visualization/thumbnail.png" width="320px">  
   
 This project simply displays the value of the squared error E by plotting it on a 3D graph.
