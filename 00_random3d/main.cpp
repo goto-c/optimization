@@ -57,14 +57,14 @@ int main(void)
     
   float center[2] = { 1.f, 1.f };
   float min_square_error = 1000000000;
-  int step_number = 0;
-  int lap_iteration_number = 0;
+  int step_num_i = 0;
+  int lap_iteration_i = 0;
     
   while (!glfwWindowShouldClose(window))
   {
       
-    lap_iteration_number++;
-    if(lap_iteration_number > 10000){
+    lap_iteration_i++;
+    if(lap_iteration_i > 10000){
         break;
     }
       
@@ -90,7 +90,7 @@ int main(void)
     
       
     if (tmp_square_error < min_square_error){
-        lap_iteration_number = 0;
+        lap_iteration_i = 0;
         min_square_error = tmp_square_error;
         center[0] = candidate[0];
         center[1] = candidate[1];
@@ -156,13 +156,13 @@ int main(void)
         if (!pixel_data) std::cout << "error pixel data " << std::endl;
             
         stbi_flip_vertically_on_write(1);
-        stbi_write_png((std::string(PATH_ROOT_DIR) + "/00_random3d/output/step" + std::to_string(step_number) + ".png").c_str(),
+        stbi_write_png((std::string(PATH_ROOT_DIR) + "/00_random3d/output/step" + std::to_string(step_num_i) + ".png").c_str(),
                         width, height, 3,
                         pixel_data,
                         0);
         free(pixel_data);
 #endif
-        step_number++;
+        step_num_i++;
         glfwSwapBuffers(window);
         glfwPollEvents();
       }

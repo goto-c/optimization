@@ -38,8 +38,23 @@ void calc_jacobian(double* r, int number_of_points, double* target_point, double
     double target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
     double target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
     for (int i=0; i<number_of_points; i++){
-        jacobian[i*2+0] = (norm(&r[i*2], target_point_plus_x) - norm(&r[i*2], target_point))/dh;
-        jacobian[i*2+1] = (norm(&r[i*2], target_point_plus_y) - norm(&r[i*2], target_point))/dh;
+        jacobian[i*2+0] = ( norm(&r[i*2], target_point_plus_x) - norm(&r[i*2], target_point) )/dh;
+        jacobian[i*2+1] = ( norm(&r[i*2], target_point_plus_y) - norm(&r[i*2], target_point) )/dh;
+    }
+}
+
+void calc_jacobian_linear(double* r, int number_of_points, double* jacobian, double dh){
+    for (int i=0; i<number_of_points*2; i++){
+        if(i%2==0){ // r[i] includes only x
+            double r_plus_x = r[i] + dh;
+            jacobian[i*2+0] = ( r_plus_x - r[i] )/dh;
+            jacobian[i*2+1] = 0;
+        }
+        else if(i%2==1){ // r[i] includes only y
+            double r_plus_y = r[i] + dh;
+            jacobian[i*2+0] = 0;
+            jacobian[i*2+1] = ( r_plus_y - r[i] )/dh;
+        }
     }
 }
 
@@ -50,13 +65,20 @@ void calc_r(double* points, int number_of_points, double* target_point, double* 
     }
 }
 
+void calc_r_linear(double* points, int number_of_points, double* target_point, double* r){
+    for (int i=0; i<number_of_points; i++){
+        r[i*2+0] = points[i*2+0] - target_point[0];
+        r[i*2+1] = points[i*2+1] - target_point[1];
+    }
+}
+
 int main(void)
 {
   GLFWwindow* window;
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "03_newton", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "04_gauss_newton", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -73,8 +95,9 @@ int main(void)
 //  double optimized_point[2] = { 640.f, 640.f }; // initial point definition
   double optimized_point[2] = { 500.f, 500.f };
   double dh = 0.01;
+  double lr = 0.01;
   double r[NUMBER_OF_POINTS*2];
-  double jacobian[NUMBER_OF_POINTS*2];
+  double jacobian[NUMBER_OF_POINTS*4];
   int step_number = 0; // for screen shot
     
   while (!glfwWindowShouldClose(window))
@@ -95,14 +118,25 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
-    calc_r(points, number_of_points, optimized_point, r);
-    calc_jacobian(r, number_of_points, optimized_point, jacobian, dh);
-    cv::Mat rmat = cv::Mat(number_of_points, 2, CV_32F, r);
-    cv::Mat jmat = cv::Mat(number_of_points, 2, CV_32F, jacobian);
-    std::cout << "jmat: " << ((jmat.t())*jmat)/number_of_points << std::endl; // BUG : inf
+    calc_r_linear(points, number_of_points, optimized_point, r);
+//            for (int i=0; i<number_of_points*2; i++){
+//                std::cout << r[i] << " ";
+//                std::cout << std::endl;
+//            }
+    calc_jacobian_linear(r, number_of_points, jacobian, dh);
+//      for (int i=0; i<number_of_points*4; i++){
+//          std::cout << jacobian[i] << " ";
+//          std::cout << std::endl;
+//      }
+    cv::Mat rmat(number_of_points*2, 1, CV_64F, r);
+    cv::Mat jmat(number_of_points*2, 2, CV_64F, jacobian);
+//    std::cout << "rmat: " << rmat << std::endl;
+//    std::cout << "jacobian: " << jmat << std::endl;
+//    std::cout << "jmat: " << ((jmat.t())*jmat)/number_of_points << std::endl; // BUG : inf
     cv::Mat sdmat = -((jmat.t()*jmat).inv())*jmat.t()*rmat;
-    optimized_point[0] += sdmat.data[0];
-    optimized_point[1] += sdmat.data[1];
+      std::cout << "sdmat: " << sdmat << std::endl;
+    optimized_point[0] += sdmat.data[0] * lr;
+    optimized_point[1] += sdmat.data[1] * lr;
         
     glPointSize(10);
     glBegin(GL_POINTS);

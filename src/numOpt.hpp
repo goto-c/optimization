@@ -9,6 +9,7 @@ float square_error_sum(float* points, float* target_point, int number_of_points)
 float square_error_sum(float* points, int* target_point, int number_of_points);
 
 void create_random_points(float* points, int field_size, int number_of_points);
+void create_random_points(double* points, int field_size, int number_of_points);
 
 void calc_gradient(float* points, float* target_point, float* gradient, float dh, int number_of_points);
 

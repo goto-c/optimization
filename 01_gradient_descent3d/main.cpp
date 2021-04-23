@@ -56,7 +56,7 @@ int main(void)
   float dh = 0.01;
   float lr = 0.0001;
   float gradient[2];
-  int step_number = 0; // for screen shot
+  int step_num_i = 0; // for screen shot
     
   while (!glfwWindowShouldClose(window))
   {
@@ -75,9 +75,9 @@ int main(void)
     glOrtho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-//    gRotatef(85.f, -1.f, 0.1f, 0.f);
+    glRotatef(85.f, -1.f, 0.1f, 0.f);
 //    glRotatef(45.f, -1.f, 0.1f, 0.f);
-    glRotatef(0.f, -1.f, 0.1f, 0.f);
+//    glRotatef(0.f, -1.f, 0.1f, 0.f);
     glTranslatef(0.f, 0.f, -0.4f);
       
     calc_gradient(points, optimized_point, gradient, dh, number_of_points);
@@ -147,14 +147,14 @@ int main(void)
         if (!pixel_data) std::cout << "error pixel data " << std::endl;
             
         stbi_flip_vertically_on_write(1);
-        stbi_write_png((std::string(PATH_ROOT_DIR) + "/01_gradient_descent3d/output/step" + std::to_string(step_number) + ".png").c_str(),
+        stbi_write_png((std::string(PATH_ROOT_DIR) + "/01_gradient_descent3d/output/step" + std::to_string(step_num_i) + ".png").c_str(),
                         width, height, 3,
                         pixel_data,
                         0);
         free(pixel_data);
 #endif
         
-        step_number++;
+        step_num_i++;
         glfwSwapBuffers(window);
         glfwPollEvents();
       }

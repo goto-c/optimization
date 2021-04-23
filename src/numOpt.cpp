@@ -24,6 +24,13 @@ void create_random_points(float* points, int field_size, int number_of_points){
         points[i] = rnd(mt) - field_size;
     }
 }
+void create_random_points(double* points, int field_size, int number_of_points){
+    std::mt19937 mt(0);
+    std::uniform_int_distribution<int> rnd(0, field_size * 2);
+    for (int i=0; i<number_of_points * 2; i++){
+        points[i] = rnd(mt) - field_size;
+    }
+}
 
 void calc_gradient(float* points, float* target_point, float* gradient, float dh, int number_of_points){
     float target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
