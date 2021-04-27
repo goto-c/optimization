@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(03_newton)
+project(03_newton_raphson)
 
 add_definitions(-DPATH_ROOT_DIR="${PROJECT_SOURCE_DIR}/..")
 

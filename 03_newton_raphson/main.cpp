@@ -34,7 +34,7 @@ int main(void)
   glfwSetErrorCallback(error_callback);
   if (!glfwInit())
     exit(EXIT_FAILURE);
-  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "03_newton", NULL, NULL);
+  window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "03_newton_raphson", NULL, NULL);
   if (!window)
   {
     glfwTerminate();
@@ -49,7 +49,7 @@ int main(void)
   create_random_points(points, field_size, number_of_points);
 
   //float optimized_point[2] = { 640.f, 640.f }; // initial point definition
-  float optimized_point[2] = { 100.f, 100.f };
+  float optimized_point[2] = { 10.f, 10.f };
 
   float dh = 0.01;
   float lr = 10;
@@ -123,7 +123,7 @@ int main(void)
         if (!pixel_data) std::cout << "error pixel data " << std::endl;
             
         stbi_flip_vertically_on_write(1);
-        stbi_write_png((std::string(PATH_ROOT_DIR) + "/03_newton/output/step" + std::to_string(step_number) + ".png").c_str(),
+        stbi_write_png((std::string(PATH_ROOT_DIR) + "/03_newton_raphson/output/step" + std::to_string(step_number) + ".png").c_str(),
                         width, height, 3,
                         pixel_data,
                         0);
