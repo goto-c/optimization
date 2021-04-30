@@ -1,6 +1,6 @@
 # 03_newton_raphson
 
-<img src="thumbnail.gif">
+<img src="thumbnail.png">
 
 This project simulates the Newton-Raphson method of optimization.  
   
