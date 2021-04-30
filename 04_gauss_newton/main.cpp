@@ -58,6 +58,15 @@ void calc_jacobian_linear(double* r, int number_of_points, double* jacobian, dou
     }
 }
 
+void analyze_jacobian(int number_of_points, double* jacobian){
+    for (int i=0; i<number_of_points; i++){
+        jacobian[i*4+0] = 1;
+        jacobian[i*4+1] = 0;
+        jacobian[i*4+2] = 0;
+        jacobian[i*4+3] = 1;
+    }
+}
+
 void calc_r(double* points, int number_of_points, double* target_point, double* r){
     for (int i=0; i<number_of_points; i++){
         r[i*2+0] = norm(&points[i*2], target_point);
@@ -67,8 +76,8 @@ void calc_r(double* points, int number_of_points, double* target_point, double* 
 
 void calc_r_linear(double* points, int number_of_points, double* target_point, double* r){
     for (int i=0; i<number_of_points; i++){
-        r[i*2+0] = points[i*2+0] - target_point[0];
-        r[i*2+1] = points[i*2+1] - target_point[1];
+        r[i*2+0] = target_point[0] - points[i*2+0];
+        r[i*2+1] = target_point[1] - points[i*2+1];
     }
 }
 
@@ -94,8 +103,8 @@ int main(void)
 
 //  double optimized_point[2] = { 640.f, 640.f }; // initial point definition
   double optimized_point[2] = { 500.f, 500.f };
-  double dh = 0.01;
-  double lr = 0.01;
+//  double dh = 0.01;
+  double lr = 1;
   double r[NUMBER_OF_POINTS*2];
   double jacobian[NUMBER_OF_POINTS*4];
   int step_number = 0; // for screen shot
@@ -118,12 +127,15 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
+      
+      
     calc_r_linear(points, number_of_points, optimized_point, r);
 //            for (int i=0; i<number_of_points*2; i++){
 //                std::cout << r[i] << " ";
 //                std::cout << std::endl;
 //            }
-    calc_jacobian_linear(r, number_of_points, jacobian, dh);
+      analyze_jacobian(number_of_points, jacobian);
+//    calc_jacobian_linear(r, number_of_points, jacobian, dh);
 //      for (int i=0; i<number_of_points*4; i++){
 //          std::cout << jacobian[i] << " ";
 //          std::cout << std::endl;
@@ -132,11 +144,17 @@ int main(void)
     cv::Mat jmat(number_of_points*2, 2, CV_64F, jacobian);
 //    std::cout << "rmat: " << rmat << std::endl;
 //    std::cout << "jacobian: " << jmat << std::endl;
-//    std::cout << "jmat: " << ((jmat.t())*jmat)/number_of_points << std::endl; // BUG : inf
-    cv::Mat sdmat = -((jmat.t()*jmat).inv())*jmat.t()*rmat;
+    std::cout << "jmat: " << ((jmat.t())*jmat)/number_of_points << std::endl;
+//    std::cout << "jmat: " << (((jmat.t())*jmat/number_of_points).inv())*(jmat.t()) << std::endl;
+      cv::Mat sdmat = -((jmat.t()*jmat).inv())*jmat.t()*rmat;
       std::cout << "sdmat: " << sdmat << std::endl;
-    optimized_point[0] += sdmat.data[0] * lr;
-    optimized_point[1] += sdmat.data[1] * lr;
+    optimized_point[0] += sdmat.at<double>(0,0) * lr;
+    optimized_point[1] += sdmat.at<double>(0,1) * lr;
+      
+      double sdnorm = sqrt(pow(sdmat.at<double>(0,0), 2) + pow(sdmat.at<double>(0,1), 2));
+      if(sdnorm < 0.0000000001){
+          break;
+      }
         
     glPointSize(10);
     glBegin(GL_POINTS);

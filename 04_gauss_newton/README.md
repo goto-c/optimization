@@ -1,6 +1,6 @@
 # 04_gauss_newton
 
-<img src="thumbnail.gif">
+<img src="thumbnail.png">
 
 This project simulates the Gauss-Newton method of optimization.  
   

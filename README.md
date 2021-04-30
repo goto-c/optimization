@@ -48,7 +48,10 @@ The gradient descent method converges to the optimal solution faster and better 
   In this method, we search towards the stationary point of the quadratic approximation of the error function, so if the error function is a quadratic polynomial, it converges in a single step.  
   In this project you can see the convergence in one step.
 
-## 04_gauss_newton
+## 04_gauss_newton  
+<img src="04_gauss_newton/thumbnail.png" width="320px">  
+
+The Gauss-Newton method is a Jacobian approximation of the Hessian and gradient of the Newton-Raphson method. Like the Newton-Raphson method, it is a quadratic convergence, so it converges in one step.  
 
 ## square_error_visualization
 <img src="square_error_visualization/thumbnail.png" width="320px">  
