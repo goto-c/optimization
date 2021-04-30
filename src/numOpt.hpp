@@ -26,3 +26,15 @@ void calc_inverse_matrix(float* matrix, float* inverse_matrix);
 void mat_dot_vec(float* matrix, float* vec, float* target_vec);
 
 void calc_z_value(float* points, float* z, int field_size, int number_of_points);
+
+double norm(double* r1, double* r2);
+
+void calc_jacobian(double* r, int number_of_points, double* target_point, double* jacobian, double dh);
+
+void calc_jacobian_linear(double* r, int number_of_points, double* jacobian, double dh);
+
+void analyze_jacobian(int number_of_points, double* jacobian);
+
+void calc_r(double* points, int number_of_points, double* target_point, double* r);
+
+void calc_r_linear(double* points, int number_of_points, double* target_point, double* r);

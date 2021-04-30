@@ -121,3 +121,54 @@ void calc_z_value(float* points, float* z, int field_size, int number_of_points)
         z[i] = square_error_sum(points, coord, number_of_points) / number_of_points;
     }
 }
+
+double norm(double* r1, double* r2){
+    return std::sqrt(std::pow(r1[0] - r2[0], 2) + std::pow(r1[1] - r2[1], 2));
+}
+
+void calc_jacobian(double* r, int number_of_points, double* target_point, double* jacobian, double dh){
+    double target_point_plus_x[2] = {target_point[0] + dh, target_point[1]     };
+    double target_point_plus_y[2] = {target_point[0]     , target_point[1] + dh};
+    for (int i=0; i<number_of_points; i++){
+        jacobian[i*2+0] = ( norm(&r[i*2], target_point_plus_x) - norm(&r[i*2], target_point) )/dh;
+        jacobian[i*2+1] = ( norm(&r[i*2], target_point_plus_y) - norm(&r[i*2], target_point) )/dh;
+    }
+}
+
+void calc_jacobian_linear(double* r, int number_of_points, double* jacobian, double dh){
+    for (int i=0; i<number_of_points*2; i++){
+        if(i%2==0){ // r[i] includes only x
+            double r_plus_x = r[i] + dh;
+            jacobian[i*2+0] = ( r_plus_x - r[i] )/dh;
+            jacobian[i*2+1] = 0;
+        }
+        else if(i%2==1){ // r[i] includes only y
+            double r_plus_y = r[i] + dh;
+            jacobian[i*2+0] = 0;
+            jacobian[i*2+1] = ( r_plus_y - r[i] )/dh;
+        }
+    }
+}
+
+void analyze_jacobian(int number_of_points, double* jacobian){
+    for (int i=0; i<number_of_points; i++){
+        jacobian[i*4+0] = 1;
+        jacobian[i*4+1] = 0;
+        jacobian[i*4+2] = 0;
+        jacobian[i*4+3] = 1;
+    }
+}
+
+void calc_r(double* points, int number_of_points, double* target_point, double* r){
+    for (int i=0; i<number_of_points; i++){
+        r[i*2+0] = norm(&points[i*2], target_point);
+        r[i*2+1] = norm(&points[i*2], target_point);
+    }
+}
+
+void calc_r_linear(double* points, int number_of_points, double* target_point, double* r){
+    for (int i=0; i<number_of_points; i++){
+        r[i*2+0] = target_point[0] - points[i*2+0];
+        r[i*2+1] = target_point[1] - points[i*2+1];
+    }
+}
