@@ -42,6 +42,11 @@ The gradient descent method converges to the optimal solution faster and better 
 ## 02_levenberg_marquardt
 
 ## 03_newton_raphson
+<img src="03_newton_raphson/thumbnail.png" width="320px">  
+  
+  In the Newton-Raphson method, the dot product of Hessian(^-1) and gradient is used as the search direction.
+  In this method, we search towards the stationary point of the quadratic approximation of the error function, so if the error function is a quadratic polynomial, it converges in a single step.  
+  In this project you can see the convergence in one step.
 
 ## 04_gauss_newton
 
