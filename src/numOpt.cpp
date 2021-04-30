@@ -41,6 +41,23 @@ void calc_gradient(float* points, float* target_point, float* gradient, float dh
     gradient[1] = dy / dh;
 }
 
+void analyze_gradient_hessian(float* points, float* target_point, float* gradient, float* hessian, int number_of_points){
+    gradient[0] = 0;
+    gradient[1] = 0;
+    hessian[0] = 0;
+    hessian[1] = 0;
+    hessian[2] = 0;
+    hessian[3] = 0;
+    for (int i=0; i<number_of_points; i++){
+        gradient[0] += 2*(target_point[0] - points[2*i+0]);
+        gradient[1] += 2*(target_point[1] - points[2*i+1]);
+        hessian[0] += 2;
+        hessian[1] += 0;
+        hessian[2] += 0;
+        hessian[3] += 2;
+    }
+}
+
 void calc_hessian_factors(float* points, float* target_point, float* hessian_factors, float dh, int number_of_points){
     // hessian_factors[3]:
     // Hessian = ( hessian_factors[0] hessian_factors[1] )
@@ -83,9 +100,13 @@ void calc_inverse_matrix(float* matrix, float* inverse_matrix){
     // H^(-1) = ( inverse_matrix[0] inverse_matrix[1] )
     //          ( inverse_matrix[2] inverse_matrix[3] )
     float det = matrix[0] * matrix[3] - matrix[2] * matrix[1];
-    inverse_matrix[0] = matrix[2] / det;
+//    inverse_matrix[0] = matrix[2] / det;
+//    inverse_matrix[1] = -matrix[1] / det;
+//    inverse_matrix[2] = -matrix[1] / det;
+//    inverse_matrix[3] = matrix[0] / det;
+    inverse_matrix[0] = matrix[3] / det;
     inverse_matrix[1] = -matrix[1] / det;
-    inverse_matrix[2] = -matrix[1] / det;
+    inverse_matrix[2] = -matrix[2] / det;
     inverse_matrix[3] = matrix[0] / det;
 }
 

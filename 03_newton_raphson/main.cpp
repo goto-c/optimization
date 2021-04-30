@@ -48,14 +48,14 @@ int main(void)
   float points[NUMBER_OF_POINTS * 2];
   create_random_points(points, field_size, number_of_points);
 
-  //float optimized_point[2] = { 640.f, 640.f }; // initial point definition
-  float optimized_point[2] = { 10.f, 10.f };
+  float optimized_point[2] = { 640.f, 640.f }; // initial point definition
+//  float optimized_point[2] = { 100.f, 100.f };
 
-  float dh = 0.01;
-  float lr = 10;
-  float gradient[2];
-  float hessian_factors[3];
-  float hessian[4];
+//  float dh = 0.01;
+  float lr = 1;
+    float gradient[2] = {0};
+//  float hessian_factors[3];
+    float hessian[4] = {0};
   float hessian_inverse[4];
   float search_direction[2];
   int step_number = 0; // for screen shot
@@ -78,6 +78,7 @@ int main(void)
     glLoadIdentity();
     glRotatef(0.f, 0.f, 0.f, 1.f);
       
+      /*
     calc_gradient(points, optimized_point, gradient, dh, number_of_points);
     if (std::sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1]) < 5000){
         break; // converged
@@ -89,14 +90,21 @@ int main(void)
     hessian[2] = hessian_factors[1];
     hessian[3] = hessian_factors[2];
     std::cout << "hessian : " << hessian[0] << ", " << hessian[1] << ", " << hessian[2] << ", " << hessian[3] << std:: endl;
+       */
+      analyze_gradient_hessian(points, optimized_point, gradient, hessian, number_of_points);
+      if (std::sqrt(gradient[0]*gradient[0] + gradient[1]*gradient[1]) < 5000){
+          break; // converged
+      }
+      std::cout << "gradient : " << gradient[0] << ", " << gradient[1] << std::endl;
+      std::cout << "hessian : " << hessian[0] << ", " << hessian[1] << ", " << hessian[2] << ", " << hessian[3] << std:: endl;
 //    normalize_mat(hessian);
 //    std::cout << "normalized hessian : " << hessian[0] << ", " << hessian[1] << ", " << hessian[2] << ", " << hessian[3] << std:: endl;
     calc_inverse_matrix(hessian, hessian_inverse);
     std::cout << "inverse : " << hessian_inverse[0] << ", " << hessian_inverse[1] << ", " << hessian_inverse[2] << ", " << hessian_inverse[3] << std::endl;
     mat_dot_vec(hessian_inverse, gradient, search_direction);
     std::cout << "search_direction : " << search_direction[0] << ", " << search_direction[1] << std::endl;
-    normalize_vec(search_direction);
-    std::cout << "normalized search_direction : " << search_direction[0] << ", " << search_direction[1] << std::endl;
+//    normalize_vec(search_direction);
+//    std::cout << "normalized search_direction : " << search_direction[0] << ", " << search_direction[1] << std::endl;
     optimized_point[0] -= search_direction[0] * lr;
     optimized_point[1] -= search_direction[1] * lr;
         

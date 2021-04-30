@@ -13,6 +13,8 @@ void create_random_points(double* points, int field_size, int number_of_points);
 
 void calc_gradient(float* points, float* target_point, float* gradient, float dh, int number_of_points);
 
+void analyze_gradient_hessian(float* points, float* target_point, float* gradient, float* hessian, int number_of_points);
+
 void calc_hessian_factors(float* points, float* target_point, float* hessian_factors, float dh, int number_of_points);
 
 void normalize_mat(float* matrix);
