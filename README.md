@@ -1,5 +1,7 @@
 # optimization  
   
+This project is demonstrations of major optimization methods.  
+
 Optimization methods are used in a wide range of engineering fields.  
 These methods are mainly classified as follows  
 1. **linear optimization methods** where all variables in the objective function and conditional equation are linear
@@ -39,7 +41,11 @@ The gradient descent method converges to the optimal solution faster and better 
 <img src="01_gradient_descent3d/thumbnail2.gif" width="320px">
 <img src="01_gradient_descent3d/thumbnail3.gif" width="320px">
 
-## 02_levenberg_marquardt
+## 02_levenberg_marquardt  
+<img src="02_levenberg_marquardt/thumbnail.gif" width="320px">  
+The algorithm for this project has been written according to this web page (Japanese).
+https://kamino.hatenablog.com/entry/lm_method
+Thank you for the author !
 
 ## 03_newton_raphson
 <img src="03_newton_raphson/thumbnail.png" width="320px">  
